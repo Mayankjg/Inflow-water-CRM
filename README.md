@@ -66,6 +66,8 @@ Open `http://localhost:3000`.
 
 The website enquiry endpoint requires `WEBSITE_ENQUIRY_SECRET` (at least 32 characters) and the matching `x-enquiry-secret` header. Keep this secret on your website's server and proxy form submissions through that server; do not expose it in browser JavaScript. The request accepts `name`, `company`, `address`, `city`, `state`, `phone`, `email`, and `requirement`. Customer name and either phone or email are required. Apply the included Prisma migration before using the new City and State fields.
 
+For Render, set the service root directory to `backend`, build with `npm install && npx prisma generate && npm run build`, and start with `npm run start:prod:migrate`. Add `DATABASE_URL` in Render's Environment settings using the PostgreSQL provider's connection URL; the local `backend/.env` file is not deployed.
+
 ## Justdial integration checklist
 1. Contact your Justdial relationship manager/support and request official CRM/API lead-push integration.
 2. Ask for supported payload fields, authentication/signature method, retry behavior, and test mode.
