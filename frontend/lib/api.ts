@@ -14,7 +14,7 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
 }
 export type Lead = {
   id: string; name: string; phone?: string | null; email?: string | null;
-  company?: string | null; address?: string | null; requirement?: string | null;
-  source: string; status: string; createdAt: string;
+  company?: string | null; address?: string | null; city?: string | null; state?: string | null; requirement?: string | null;
+  source: string; status: string; createdAt: string; notes?: string | null;
 };
 export type FollowUp = { id: string; title: string; dueAt: string; status: string; lead?: Lead | null };

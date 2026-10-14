@@ -5,7 +5,7 @@ import Shell from '../../components/Shell';
 import { api, Lead } from '../../lib/api';
 
 const statuses = ['NEW', 'INTERESTED', 'CONTACTED', 'CONVERTED', 'LOST'];
-const emptyForm = { name: '', company: '', address: '', phone: '', email: '', requirement: '', source: 'MANUAL' };
+const emptyForm = { name: '', company: '', address: '', city: '', state: '', phone: '', email: '', requirement: '', source: 'MANUAL' };
 
 export default function LeadsPage() {
   const [items, setItems] = useState<Lead[]>([]);
@@ -60,6 +60,8 @@ export default function LeadsPage() {
           <label className={labelClass}>Email<input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className={inputClass} /></label>
           <label className={labelClass}>Company name<input type="text" value={form.company} onChange={e => setForm({ ...form, company: e.target.value })} className={inputClass} /></label>
           <label className={labelClass}>Mobile no<input type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className={inputClass} /></label>
+          <label className={labelClass}>City<input type="text" value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} className={inputClass} /></label>
+          <label className={labelClass}>State<input type="text" value={form.state} onChange={e => setForm({ ...form, state: e.target.value })} className={inputClass} /></label>
           <label className={`${labelClass} sm:col-span-2`}>Address<textarea value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} rows={2} className={inputClass} /></label>
           <label className={labelClass}>Requirement<input type="text" value={form.requirement} onChange={e => setForm({ ...form, requirement: e.target.value })} className={inputClass} /></label>
           <label className={labelClass}>Source<select value={form.source} onChange={e => setForm({ ...form, source: e.target.value })} className={inputClass}><option value="MANUAL">Manual</option><option value="JUSTDIAL">Justdial</option><option value="WEBSITE">Website</option><option value="REFERRAL">Referral</option><option value="OTHER">Other</option></select></label>
@@ -71,12 +73,12 @@ export default function LeadsPage() {
         <h2 className="mb-4 text-lg font-semibold">All leads</h2>
         {error && <p className="mb-3 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
         <div className="max-w-full overflow-x-auto">
-          <table className="w-full min-w-[920px] text-left text-sm">
-            <thead className="border-b text-slate-500"><tr>{['Customer', 'Company', 'Address', 'Phone', 'Requirement', 'Source', 'Status'].map(x => <th key={x} className="px-2 py-3 font-medium">{x}</th>)}</tr></thead>
+          <table className="w-full min-w-[1250px] text-left text-sm">
+            <thead className="border-b text-slate-500"><tr>{['Customer', 'Company', 'City', 'State', 'Address', 'Phone / Email', 'Enquiry details', 'Source', 'Status', 'Received'].map(x => <th key={x} className="px-2 py-3 font-medium">{x}</th>)}</tr></thead>
             <tbody>{items.map(x => <tr key={x.id} className="border-b last:border-0">
-              <td className="px-2 py-3 font-medium">{x.name}</td><td className="px-2 py-3">{x.company || '—'}</td><td className="max-w-48 truncate px-2 py-3" title={x.address || ''}>{x.address || '—'}</td><td className="px-2 py-3">{x.phone || '—'}</td><td className="px-2 py-3">{x.requirement || '—'}</td><td className="px-2 py-3">{x.source}</td>
-              <td className="px-2 py-3"><select aria-label={`Status for ${x.name}`} value={x.status} onChange={e => updateStatus(x.id, e.target.value)} className="rounded-lg border p-2">{statuses.map(s => <option key={s} value={s}>{s === 'NEW' ? 'New' : s === 'INTERESTED' ? 'Interested' : s === 'CONTACTED' ? 'Contacted' : s === 'CONVERTED' ? 'Converted' : 'Lost'}</option>)}</select></td>
-            </tr>)}{!items.length && <tr><td colSpan={7} className="px-2 py-10 text-center text-slate-500">No leads found.</td></tr>}</tbody>
+              <td className="px-2 py-3 font-medium">{x.name}</td><td className="px-2 py-3">{x.company || '—'}</td><td className="px-2 py-3">{x.city || '—'}</td><td className="px-2 py-3">{x.state || '—'}</td><td className="max-w-48 truncate px-2 py-3" title={x.address || ''}>{x.address || '—'}</td><td className="px-2 py-3">{x.phone || '—'}{x.email && <div className="text-xs text-slate-500">{x.email}</div>}</td><td className="max-w-64 whitespace-pre-wrap px-2 py-3" title={x.requirement || ''}>{x.requirement || '—'}</td><td className="px-2 py-3">{x.source}</td>
+              <td className="px-2 py-3"><select aria-label={`Status for ${x.name}`} value={x.status} onChange={e => updateStatus(x.id, e.target.value)} className="rounded-lg border p-2">{statuses.map(s => <option key={s} value={s}>{s === 'NEW' ? 'New' : s === 'INTERESTED' ? 'Interested' : s === 'CONTACTED' ? 'Contacted' : s === 'CONVERTED' ? 'Converted' : 'Lost'}</option>)}</select></td><td className="whitespace-nowrap px-2 py-3">{new Date(x.createdAt).toLocaleDateString()}</td>
+            </tr>)}{!items.length && <tr><td colSpan={10} className="px-2 py-10 text-center text-slate-500">No leads found.</td></tr>}</tbody>
           </table>
         </div>
       </section>

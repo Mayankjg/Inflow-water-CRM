@@ -62,6 +62,9 @@ Open `http://localhost:3000`.
 - Follow-ups: create and list follow-up tasks
 - Settings: integration status and setup guidance
 - Justdial webhook: accepts lead payloads, records source as `JUSTDIAL`, deduplicates by external lead ID when supplied
+- Website enquiry endpoint: `POST /api/integrations/website/enquiry`; records source as `WEBSITE`
+
+The website enquiry endpoint requires `WEBSITE_ENQUIRY_SECRET` (at least 32 characters) and the matching `x-enquiry-secret` header. Keep this secret on your website's server and proxy form submissions through that server; do not expose it in browser JavaScript. The request accepts `name`, `company`, `address`, `city`, `state`, `phone`, `email`, and `requirement`. Customer name and either phone or email are required. Apply the included Prisma migration before using the new City and State fields.
 
 ## Justdial integration checklist
 1. Contact your Justdial relationship manager/support and request official CRM/API lead-push integration.

@@ -32,6 +32,8 @@ export class JustdialController {
     const lead = await this.prisma.lead.create({
       data: {
         name, phone: phone || null, email: email ? String(email) : null,
+        city: body?.city ? String(body.city).trim() : null,
+        state: body?.state ? String(body.state).trim() : null,
         requirement: requirement ? String(requirement) : null,
         source: LeadSource.JUSTDIAL, status: LeadStatus.NEW,
         externalLeadId: externalLeadId ? String(externalLeadId) : null,

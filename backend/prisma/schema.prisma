@@ -34,6 +34,8 @@ model Lead {
   name           String
   company        String?
   address        String?
+  city           String?
+  state          String?
   phone          String?
   email          String?
   requirement    String?
