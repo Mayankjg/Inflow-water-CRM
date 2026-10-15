@@ -59,7 +59,9 @@ Open `http://localhost:3000`.
 - Dashboard: counts and latest leads
 - Leads: create, list, update status, delete
 - Contacts: create and list contacts
-- Follow-ups: create and list follow-up tasks
+- Follow-ups: create, edit/reschedule, complete, and list follow-up tasks with optional lead links and notes
+- Reminders: create, edit/reschedule, complete, and list dated reminders
+- Notifications: navbar bell with unread count for due or overdue pending follow-ups and reminders
 - Settings: integration status and setup guidance
 - Justdial webhook: accepts lead payloads, records source as `JUSTDIAL`, deduplicates by external lead ID when supplied
 - Website enquiry endpoint: `POST /api/integrations/website/enquiry`; records source as `WEBSITE`
@@ -67,6 +69,8 @@ Open `http://localhost:3000`.
 The website enquiry endpoint requires `WEBSITE_ENQUIRY_SECRET` (at least 32 characters) and the matching `x-enquiry-secret` header. Keep this secret on your website's server and proxy form submissions through that server; do not expose it in browser JavaScript. The request accepts `name`, `company`, `address`, `city`, `state`, `phone`, `email`, and `requirement`. Customer name and either phone or email are required. Apply the included Prisma migration before using the new City and State fields.
 
 For Render, set the service root directory to `backend`, build with `npm install && npx prisma generate && npm run build`, and start with `npm run start:prod:migrate`. Add `DATABASE_URL` in Render's Environment settings using the PostgreSQL provider's connection URL; the local `backend/.env` file is not deployed.
+
+The reminder and notification tables are included in the latest Prisma migration. Run `npx prisma migrate deploy` from `backend` for an existing database (or `npx prisma migrate dev` during local development) before starting the updated API.
 
 ## Justdial integration checklist
 1. Contact your Justdial relationship manager/support and request official CRM/API lead-push integration.

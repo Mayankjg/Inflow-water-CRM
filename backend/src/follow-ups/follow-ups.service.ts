@@ -10,6 +10,15 @@ export class FollowUpsService {
   async complete(id: string) {
     const task = await this.prisma.followUp.findUnique({ where: { id } });
     if (!task) throw new NotFoundException('Follow-up not found');
-    return this.prisma.followUp.update({ where: { id }, data: { status: FollowUpStatus.COMPLETED } });
+    const result = await this.prisma.followUp.update({ where: { id }, data: { status: FollowUpStatus.COMPLETED } });
+    await this.prisma.notification.deleteMany({ where: { sourceKey: `FOLLOW_UP:${id}` } });
+    return result;
+  }
+  async update(id: string, dto: Omit<Partial<CreateFollowUpDto>, 'leadId'> & { leadId?: string | null }) {
+    const task = await this.prisma.followUp.findUnique({ where: { id } });
+    if (!task) throw new NotFoundException('Follow-up not found');
+    const result = await this.prisma.followUp.update({ where: { id }, data: { ...dto, ...(dto.dueAt ? { dueAt: new Date(dto.dueAt) } : {}) } });
+    await this.prisma.notification.deleteMany({ where: { sourceKey: `FOLLOW_UP:${id}` } });
+    return result;
   }
 }
