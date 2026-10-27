@@ -8,7 +8,7 @@ export class LeadsService {
   constructor(private prisma: PrismaService) {}
   findAll() { return this.prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, include: { followUps: true } }); }
   async findOne(id: string) {
-    const lead = await this.prisma.lead.findUnique({ where: { id }, include: { followUps: true } });
+    const lead = await this.prisma.lead.findUnique({ where: { id }, include: { followUps: { orderBy: { createdAt: 'desc' } }, reminders: { orderBy: { dueAt: 'asc' } }, activities: { orderBy: { createdAt: 'desc' } } } });
     if (!lead) throw new NotFoundException('Lead not found');
     return lead;
   }

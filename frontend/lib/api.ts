@@ -17,6 +17,8 @@ export type Lead = {
   company?: string | null; address?: string | null; city?: string | null; state?: string | null; requirement?: string | null;
   source: string; status: string; createdAt: string; notes?: string | null;
 };
-export type FollowUp = { id: string; title: string; dueAt: string; status: string; notes?: string | null; lead?: Lead | null };
-export type Reminder = { id: string; title: string; dueAt: string; status: string };
-export type Notification = { id: string; source: 'FOLLOW_UP' | 'REMINDER'; sourceId: string; title: string; dueAt: string; readAt: string | null };
+export type FollowUp = { id: string; title: string; dueAt: string; status: string; notes?: string | null; result?: string | null; leadId?: string | null; lead?: Lead | null; createdAt: string };
+export type Reminder = { id: string; title: string; dueAt: string; status: string; description?: string | null; leadId?: string | null; lead?: Lead | null };
+export type Activity = { id: string; type: string; title: string; details?: string | null; createdAt: string };
+export type LeadDetails = Lead & { followUps: FollowUp[]; reminders: Reminder[]; activities: Activity[] };
+export type Notification = { id: string; source: 'FOLLOW_UP' | 'REMINDER'; sourceId: string; title: string; dueAt: string; readAt: string | null; leadId?: string | null; leadName?: string | null };

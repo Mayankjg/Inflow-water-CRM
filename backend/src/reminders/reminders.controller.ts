@@ -5,10 +5,14 @@ import { RemindersService } from './reminders.service';
 class ReminderDto {
   @IsString() @MaxLength(160) title!: string;
   @IsDateString() dueAt!: string;
+  @IsOptional() @IsString() description?: string;
+  @IsOptional() @IsString() leadId?: string;
 }
 class UpdateReminderDto {
   @IsOptional() @IsString() @MaxLength(160) title?: string;
   @IsOptional() @IsDateString() dueAt?: string;
+  @IsOptional() @IsString() description?: string;
+  @IsOptional() @IsString() leadId?: string | null;
 }
 @Controller('reminders')
 export class RemindersController {
