@@ -130,3 +130,29 @@ model IntegrationEvent {
   message    String?
   createdAt  DateTime @default(now())
 }
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  resetTokens  PasswordResetToken[]
+}
+
+model AuthState {
+  id                   String   @id
+  registrationClosedAt DateTime?
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  @@index([userId, expiresAt])
+}

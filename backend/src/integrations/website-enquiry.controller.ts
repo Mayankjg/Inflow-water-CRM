@@ -3,6 +3,7 @@ import { timingSafeEqual } from 'crypto';
 import { IsEmail, IsOptional, IsString, MaxLength } from 'class-validator';
 import { LeadSource, LeadStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { Public } from '../auth/auth.decorator';
 
 class WebsiteEnquiryDto {
   @IsString() @MaxLength(120) name!: string;
@@ -16,6 +17,7 @@ class WebsiteEnquiryDto {
 }
 
 @Controller('integrations/website')
+@Public()
 export class WebsiteEnquiryController {
   constructor(private readonly prisma: PrismaService) {}
 

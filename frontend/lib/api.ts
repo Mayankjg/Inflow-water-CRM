@@ -1,12 +1,17 @@
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const token = typeof window !== 'undefined' ? window.localStorage.getItem('inflow_admin_token') : null;
   const response = await fetch(`${API}${path}`, {
     ...options,
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(options.headers || {}) },
     cache: 'no-store',
   });
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
+    if (response.status === 401 && token && typeof window !== 'undefined' && !path.startsWith('/auth/')) {
+      window.localStorage.removeItem('inflow_admin_token');
+      window.location.assign('/login');
+    }
     throw new Error(body.message || `Request failed (${response.status})`);
   }
   if (response.status === 204) return undefined as T;

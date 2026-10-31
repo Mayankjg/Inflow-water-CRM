@@ -1,0 +1,12 @@
+﻿'use client';
+import Link from 'next/link';
+import { FormEvent, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { api } from '../../lib/api';
+export default function RegisterPage() {
+ const router=useRouter(); const [open,setOpen]=useState<boolean|null>(null); const [username,setUsername]=useState(''); const [email,setEmail]=useState(''); const [password,setPassword]=useState(''); const [error,setError]=useState('');
+ useEffect(()=>{api<{registrationOpen:boolean}>('/auth/status').then(x=>setOpen(x.registrationOpen)).catch(e=>setError(e.message));},[]);
+ async function submit(e:FormEvent){e.preventDefault();setError('');try{await api('/auth/register',{method:'POST',body:JSON.stringify({username,email,password})});router.replace('/login?registered=1');}catch(e){setError(e instanceof Error?e.message:'Registration failed');}}
+ return <main className="flex min-h-screen items-center justify-center p-5"><section className="w-full max-w-md rounded-2xl border bg-white p-8 shadow-sm"><Link href="/login" className="text-sm text-emerald-700">â† Sign in</Link><h1 className="mt-4 text-2xl font-bold">Create the first admin</h1><p className="mt-2 text-sm text-slate-500">This one-time setup creates the MAIN_ADMIN account and closes registration permanently.</p>{open===false?<p className="mt-6 rounded-lg bg-slate-100 p-4 text-sm">Initial registration is closed. Sign in with the existing admin account.</p>:<form autoComplete="off" onSubmit={submit} className="mt-6 space-y-4"><label className="block text-sm font-medium">Username<input required minLength={3} maxLength={40} value={username} onChange={e=>setUsername(e.target.value)} className="mt-1 w-full rounded-lg border p-3" autoComplete="off"/></label><label className="block text-sm font-medium">Admin email<input required type="email" value={email} onChange={e=>setEmail(e.target.value)} className="mt-1 w-full rounded-lg border p-3" autoComplete="off"/></label><label className="block text-sm font-medium">Password<input required type="password" minLength={8} maxLength={128} value={password} onChange={e=>setPassword(e.target.value)} className="mt-1 w-full rounded-lg border p-3" autoComplete="new-password"/><span className="mt-1 block text-xs text-slate-500">Use at least 8 characters.</span></label>{error&&<p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}<button disabled={open!==true} className="w-full rounded-lg bg-emerald-700 p-3 font-semibold text-white disabled:opacity-50">Create MAIN_ADMIN</button></form>}</section></main>;
+}
+

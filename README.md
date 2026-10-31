@@ -23,7 +23,16 @@ DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/simple_crm?sche
 PORT=4000
 FRONTEND_URL="http://localhost:3000"
 JUSTDIAL_WEBHOOK_SECRET="replace-with-a-long-random-secret"
+AUTH_SECRET="replace-with-at-least-32-random-bytes"
+SMTP_HOST="smtp.example.com"
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER="your-smtp-username"
+SMTP_PASS="your-smtp-password"
+SMTP_FROM="Inflow Water CRM <crm@example.com>"
 ```
+
+Set `AUTH_SECRET` to a random value at least 32 characters long. Configure the SMTP values for password reset delivery. Apply the auth migration with `npx prisma migrate deploy` from `backend` before starting the API. It creates only authentication tables and preserves all existing CRM records. On a fresh database, open `/register` to create the single MAIN_ADMIN account; registration then closes permanently. Admin sessions expire after eight hours.
 
 Do not commit `.env` files or expose secrets in the frontend.
 

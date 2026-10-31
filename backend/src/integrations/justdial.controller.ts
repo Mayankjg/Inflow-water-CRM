@@ -1,8 +1,11 @@
-import { Body, Controller, Headers, HttpCode, Post, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Headers, HttpCode, Post, ServiceUnavailableException, UnauthorizedException } from '@nestjs/common';
+import { timingSafeEqual } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { LeadSource, LeadStatus } from '@prisma/client';
+import { Public } from '../auth/auth.decorator';
 
 @Controller('integrations/justdial')
+@Public()
 export class JustdialController {
   constructor(private prisma: PrismaService) {}
 
@@ -11,7 +14,9 @@ export class JustdialController {
   async receive(@Body() body: any, @Headers('x-webhook-secret') secret?: string) {
     // Placeholder verification only. Replace with Justdial's documented auth/signature scheme.
     const configuredSecret = process.env.JUSTDIAL_WEBHOOK_SECRET;
-    if (configuredSecret && secret !== configuredSecret) throw new UnauthorizedException('Invalid webhook secret');
+    if (!configuredSecret || configuredSecret.length < 32) throw new ServiceUnavailableException('Justdial webhook authentication is not configured');
+    const supplied = Buffer.from(secret || '', 'utf8'); const expected = Buffer.from(configuredSecret, 'utf8');
+    if (supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) throw new UnauthorizedException('Invalid webhook secret');
 
     const name = String(body?.name ?? body?.customer_name ?? '').trim();
     const phone = String(body?.phone ?? body?.mobile ?? body?.customer_mobile ?? '').trim();
